@@ -41,4 +41,10 @@
         <!--扫描dao层mapper接口-->
         <property name="basePackage" value="com.spike.dao"/>
     </bean>
+
+    <!--注入redisDao-->
+    <bean id="redisDao" class="com.spike.dao.cache.RedisDao">
+        <constructor-arg name="ip" value="localhost"/>
+        <constructor-arg name="port" value="6379"/>
+    </bean>
 </beans>

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: tangji
@@ -39,4 +40,9 @@ public interface SpikeMapper {
      * @return
      */
     public List<Spike> queryAll(@Param("offset") Integer offset, @Param("limit") Integer limit);
+
+    /**
+     * 通过存储过程执行秒杀
+     */
+    public void killByProcedure(Map<String, Object> paramMap);
 }

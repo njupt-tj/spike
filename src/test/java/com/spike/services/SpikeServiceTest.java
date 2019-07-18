@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import sun.util.resources.ga.LocaleNames_ga;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class SpikeServiceTest {
 
     @Test
     public void testSpikeLogic() {
-        long id=1000L;
+        long id=1001L;
         Exposer exposer=spikeService.exportSpikeUrl(id);
         if (exposer.isExposed()){
             logger.info(exposer);
@@ -63,5 +64,20 @@ public class SpikeServiceTest {
         }else {
             logger.warn(exposer);
         }
+    }
+    @Test
+    public void testExecuteByProcedure(){
+        long id=1000L;
+        long phone=13934215342L;
+        Exposer exposer = spikeService.exportSpikeUrl(id);
+        System.out.println(exposer.isExposed());
+        if (exposer.isExposed()){
+            String md5=exposer.getMd5();
+            SpikeExecution spikeExecution = spikeService.executeSpikeByProcedure(id, phone, md5);
+            System.out.println(spikeExecution.getStateInfo());
+            logger.info("spikeInfo"+spikeExecution.getStateInfo());
+        }
+
+
     }
 }

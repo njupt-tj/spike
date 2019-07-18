@@ -43,4 +43,16 @@ public interface SpikeService {
      */
     SpikeExecution executeSpike(Long spikeId, long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException;
 
+
+    /**
+     * 通过存储过程调用
+     * @param spikeId
+     * @param userPhone
+     * @param md5
+     * @return
+     * @throws SpikeCloseException
+     * @throws RepeatSpikeException
+     */
+    SpikeExecution executeSpikeByProcedure(Long spikeId, long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException;
+
 }

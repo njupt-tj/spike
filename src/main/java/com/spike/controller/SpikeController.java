@@ -109,7 +109,7 @@ public class SpikeController {
         }
         SpikeResult<SpikeExecution> result;
         try {
-            SpikeExecution spikeExecution = spikeService.executeSpike(spikeId, userPhone, md5);
+            SpikeExecution spikeExecution = spikeService.executeSpikeByProcedure(spikeId, userPhone, md5);
             result = new SpikeResult<>(true, spikeExecution);
         } catch (RepeatSpikeException e) {
             SpikeExecution execution = new SpikeExecution(spikeId, SpikeStateEnum.REPEAT_KILL);

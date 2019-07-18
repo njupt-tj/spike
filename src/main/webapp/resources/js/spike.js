@@ -65,7 +65,7 @@ var spike = {
                 var format = event.strftime('秒杀倒计时：%D天 %H时 %M分 %S秒');
                 spikeBox.html(format);
             }).on('finish.countdown',function () {
-                //获取秒杀地址，控制现实逻辑
+                //获取秒杀地址，控制显示逻辑
                 spike.handlerSpike(spikeId,spikeBox);
             });
         }else{
