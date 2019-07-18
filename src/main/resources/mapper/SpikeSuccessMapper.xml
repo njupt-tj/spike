@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spike.dao.SpikeSuccessMapper">
+    <resultMap id="spikeSuccessMap" type="SpikeSuccess">
+        <id property="spikeId" column="spike_id"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time)"/>
+        <!--一对多映射使用association-->
+        <association property="spike" javaType="Spike">
+            <id property="spikeId" column="spike_id"/>
+            <result property="name" column="name"/>
+            <result property="number" column="number"/>
+            <result property="startTime" column="start_time"/>
+            <result property="endTime" column="end_time"/>
+            <result property="createTime" column="create_time"/>
+        </association>
+    </resultMap>
+
+    <insert id="addSuccessSpikeByIdAndPhone">
+        insert ignore into success_spike_t(spike_id, user_phone, create_time)
+        values (#{spikeId}, #{userPhone}, now());
+    </insert>
+    <!--告诉mybatis把结果映射到spikeSuccess的同时，也映射到Spike-->
+    <select id="queryByIdWithSpike" resultMap="spikeSuccessMap">
+        select sst.spike_id,
+               sst.user_phone,
+               sst.create_time,
+               sst.status,
+               st.spike_id,
+               st.name,
+               st.number,
+               st.start_time,
+               st.end_time,
+               st.create_time
+        from success_spike_t sst
+                 inner join spike_t st on sst.spike_id = st.spike_id
+        where sst.spike_id = #{spikeId}
+          and sst.user_phone = #{userPhone};
+    </select>
+
+</mapper>

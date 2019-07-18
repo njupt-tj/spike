@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spike.dao.SpikeMapper">
+    <!--为dao接口的方法提供sql语句配置-->
+    <update id="reduceNumber">
+        update
+            spike_t
+        set number=number-1
+        where spike_id=#{spikeId}
+        and start_time <![CDATA[ <= ]]>#{spikeTime}
+        and end_time>=#{spikeTime}
+        and number>0;
+    </update>
+    <select id="getSpikeById" parameterType="long" resultType="Spike">
+        select spike_id,name,number,start_time,end_time,create_time
+        from spike_t
+        where spike_id=#{spikeId};
+    </select>
+    <select id="queryAll" resultType="Spike">
+        select spike_id,name,number,start_time,end_time,create_time
+        from spike_t
+        order by create_time desc
+        limit #{offset},#{limit};
+    </select>
+</mapper>

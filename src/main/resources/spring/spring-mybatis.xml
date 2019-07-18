@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--配置数据库相关参数-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--数据库连接池-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <!--配置数据库相关properties属性-->
+        <property name="driverClassName" value="${jdbc.database.driver}"/>
+        <property name="url" value="${jdbc.database.url}"/>
+        <property name="username" value="${jdbc.database.username}"/>
+        <property name="password" value="${jdbc.database.password}"/>
+        <!--连接池的最大数据库连接数-->
+        <property name="maxActive" value="255"/>
+        <!--最大等待连接中的数量-->
+        <property name="maxIdle" value="5"/>
+        <!--最大连接等待超时时间ms-->
+        <property name="maxWait" value="10000"/>
+    </bean>
+
+    <!--配置sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--sql配置文件：mybatis需要的映射文件-->
+        <property name="mapperLocations" value="classpath*:mapper/*Mapper.xml"/>
+        <!--配置mybatis全局配置文件-->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <!--使用别名-->
+        <property name="typeAliasesPackage" value="com.spike.entity"/>
+    </bean>
+
+    <!--扫描dao层的mapper接口，动态生成mapper接口实例，加入到spring容器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!--扫描dao层mapper接口-->
+        <property name="basePackage" value="com.spike.dao"/>
+    </bean>
+</beans>
