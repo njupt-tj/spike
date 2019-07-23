@@ -3,7 +3,6 @@ package com.spike.dao;
 import com.spike.entity.SpikeSuccess;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import sun.net.idn.Punycode;
 
 import java.util.List;
 
