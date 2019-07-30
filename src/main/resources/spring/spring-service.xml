@@ -3,12 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx.xsd">
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <!--扫描service包的注解-->
     <context:component-scan base-package="com.spike.services"/>
@@ -18,4 +21,52 @@
     </bean>
     <!--配置基于注解的声明式事务-->
     <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--rabbitmq配置-->
+    <!--配置订单监听器-->
+    <bean id="orderMessageListener" class="com.spike.services.rabbitmq.OrderMessageListener"/>
+    <bean id="mailMessageListener" class="com.spike.services.rabbitmq.MailMessageListener"/>
+    <!--连接到rabbitmq服务器-->
+    <rabbit:connection-factory id="connectionFactory" host="localhost" port="5672" username="guest" password="guest"
+                               virtual-host="/" requested-heartbeat="60"/>
+    <!--配置json消息转换器-->
+    <bean id="jsonMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"/>
+    <!--配置rabbitTemplate-->
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" message-converter="jsonMessageConverter"
+    exchange="MyExchange" routing-key="order.test"/>
+    <!--获取权限，否则队列无法创建-->
+    <rabbit:admin connection-factory="connectionFactory"/>
+    <!--配置队列名称-->
+    <rabbit:queue name="mailQueue" durable="true"/>
+    <rabbit:queue name="orderQueue" durable="true"/>
+    <!--配置交换器-->
+    <rabbit:topic-exchange name="MyExchange" durable="true">
+        <!--队列绑定模式-->
+        <rabbit:bindings>
+            <rabbit:binding pattern="order.*" queue="orderQueue"/>
+            <rabbit:binding pattern="mail.*" queue="mailQueue"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    <!--配置监听器-->
+    <rabbit:listener-container connection-factory="connectionFactory">
+        <rabbit:listener ref="orderMessageListener" queue-names="orderQueue"/>
+        <rabbit:listener ref="mailMessageListener" queue-names="mailQueue"/>
+    </rabbit:listener-container>
+
+    <!--配置邮件-->
+    <context:property-placeholder location="classpath:email.properties" ignore-unresolvable="true"/>
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}"/>
+        <property name="port" value="${mail.port}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="defaultEncoding" value="${mail.encoding}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+                <prop key="mail.smtp.starttls.required">${mail.smtp.starttls.required}</prop>
+            </props>
+        </property>
+    </bean>
 </beans>

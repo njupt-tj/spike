@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spike.dao.UserMapper">
+    <insert id="insertUser" parameterType="User">
+        insert into user(user_name, user_password, user_phone, user_address, user_email)
+        values (#{userName},#{userPassword},#{userPhone},#{userAddress},#{userEmail});
+     </insert>
+    <select id="getUserById" parameterType="int">
+        select *
+        from user
+        where user_id=#{userId};
+    </select>
+
+    <update id="updateUserPassword">
+        update user set user_password=#{userPassword} where user_id=#{userId};
+    </update>
+</mapper>

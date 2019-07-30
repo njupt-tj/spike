@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--配置数据库相关参数-->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
     <!--数据库连接池-->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <!--配置数据库相关properties属性-->

@@ -1,18 +1,16 @@
-//
-//
 var spike = {
     URL: {},
     handlerSpike:function(spikeId,node) {
         //获取秒杀地址，显示控制逻辑，执行秒杀
         node.hide().html('<button class="btn btn-primary btn-lg" id="spikeBtn">开始秒杀</button>');
-        $.post('/phoneSpike/spike/'+spikeId+'/exposer',{},function (result) {
+        $.post('/spike/'+spikeId+'/exposer',{},function (result) {
             //回调函数中，执行交互逻辑
             if (result && result['success']){
                 var exposer=result['data'];
                 if (exposer['exposed']){
                     //开启秒杀
                     var md5=exposer['md5'];
-                    var spikeUrl='/phoneSpike/spike/'+spikeId+'/'+md5+'/execution';
+                    var spikeUrl='/spike/'+spikeId+'/'+md5+'/execution';
                     console.log('spikeUrl'+spikeUrl);
                     //绑定一次点击事件,防止重复点击
                     $('#spikeBtn').one('click',function () {
@@ -92,7 +90,7 @@ var spike = {
                     console.log("inputPhone" + inputPhone)//TODO
                     if (spike.ValidatePhone(inputPhone)) {
                         //写入cookie,设置超时时间
-                        $.cookie('spikePhone', inputPhone, {expires: 7, path: '/phoneSpike/spike'});
+                        $.cookie('spikePhone', inputPhone, {expires: 1, path: '/spike'});
                         //刷新页面
                         window.location.reload();
                     } else {
@@ -106,7 +104,7 @@ var spike = {
             var startTime = params['startTime'];
             var endTime = params['endTime'];
             var spikeId = params['spikeId'];
-            $.get('/phoneSpike/spike/currentTime', {}, function (result) {
+            $.get('/spike/currentTime', {}, function (result) {
                 if (result && result['success']) {
                     var nowtime = result['data'];
                     spike.countdown(spikeId, nowtime, startTime, endTime);

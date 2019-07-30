@@ -7,6 +7,8 @@ import com.spike.entity.Spike;
 import com.spike.enums.SpikeStateEnum;
 import com.spike.exception.RepeatSpikeException;
 import com.spike.exception.SpikeCloseException;
+import com.spike.services.RabbitmqSpikeService;
+import com.spike.services.RedisSpikeService;
 import com.spike.services.SpikeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +25,15 @@ import java.util.List;
  * Description: <...>
  */
 @Controller
-@RequestMapping("/spike")// url:/模块/资源/{id}/细分
+//@RequestMapping("/")// url:/模块/资源/{id}/细分
 public class SpikeController {
     private Logger logger = Logger.getLogger(SpikeController.class);
+ /*   @Autowired
+    private RedisSpikeService redisSpikeService;*/
     @Autowired
     private SpikeService spikeService;
-
+    @Autowired
+    private RabbitmqSpikeService rabbitmqSpikeService;
     /**
      * 列表页请求
      *
@@ -53,12 +58,12 @@ public class SpikeController {
     public String detail(@PathVariable("spikeId") Long spikeId, Model model) {
         if (spikeId == null) {
             //重定向
-            return "redirect:/spike/list";
+            return "redirect:/list";
         }
         Spike spike = spikeService.getSpike(spikeId);
         if (spike == null) {
             //请求转发
-            return "forward:/spike/list";
+            return "forward:/list";
         }
         model.addAttribute("spike", spike);
         return "detail";
@@ -105,7 +110,7 @@ public class SpikeController {
         }
         SpikeResult<SpikeExecution> result;
         try {
-            SpikeExecution spikeExecution = spikeService.executeSpikeByProcedure(spikeId, userPhone, md5);
+            SpikeExecution spikeExecution = rabbitmqSpikeService.excuteSpikeByRabbitMQ(spikeId, userPhone, md5);
             result = new SpikeResult<>(true, spikeExecution);
         } catch (RepeatSpikeException e) {
             SpikeExecution execution = new SpikeExecution(spikeId, SpikeStateEnum.REPEAT_KILL);

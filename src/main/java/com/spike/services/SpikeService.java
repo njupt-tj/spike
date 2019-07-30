@@ -41,7 +41,7 @@ public interface SpikeService {
      * @param userPhone
      * @param md5
      */
-    SpikeExecution executeSpike(Long spikeId, long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException;
+    SpikeExecution executeSpike(Long spikeId, Long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException;
 
 
     /**
@@ -53,6 +53,6 @@ public interface SpikeService {
      * @throws SpikeCloseException
      * @throws RepeatSpikeException
      */
-    SpikeExecution executeSpikeByProcedure(Long spikeId, long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException;
+    SpikeExecution executeSpikeByProcedure(Long spikeId, Long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException;
 
 }

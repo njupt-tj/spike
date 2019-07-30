@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>秒杀列表页</title>
+    <title>秒杀</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 引入 Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -25,8 +25,8 @@
 <body>
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading text-center">
-            <h1>秒杀列表</h1>
+        <div class="panel-heading text-center color-bar" >
+            <h1>待秒杀商品</h1>
         </div>
         <div class="panel-body">
             <table class="table table-hover">
@@ -36,7 +36,6 @@
                     <th>库存</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
-                    <th>创建时间</th>
                     <th>详情页</th>
                 </tr>
                 </thead>
@@ -50,9 +49,7 @@
                          <td>
                              <fmt:formatDate value="${sk.endTime}" pattern="yyyy:MM:dd HH:mm:ss"/></td>
                          <td>
-                             <fmt:formatDate value="${sk.createTime}" pattern="yyyy:MM:dd HH:mm:ss"/></td>
-                         <td>
-                             <a class="btn btn-info" href="/phoneSpike/spike/${sk.spikeId}/detail" target="_blank">link</a>
+                             <a class="btn btn-info" href="/spike/${sk.spikeId}/detail" target="_blank">go</a>
                          </td>
                      </tr>
                   </c:forEach>

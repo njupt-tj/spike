@@ -12,9 +12,9 @@ import com.spike.exception.RepeatSpikeException;
 import com.spike.exception.SpikeCloseException;
 import com.spike.exception.SpikeException;
 import com.spike.services.SpikeService;
+import com.spike.utils.MD5Util;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -42,12 +42,10 @@ public class SpikeServiceImpl implements SpikeService {
 
     @Autowired
     private RedisDao redisDao;
-    //用于混淆MD5
-    private final String slat = "mfamkfkdmgfd%$$#@*&&jkfdfk";
 
     @Override
     public List<Spike> getAllSpikes() {
-        return spikeMapper.queryAll(0, 4);
+        return spikeMapper.queryAll(0, 10);
     }
 
     @Override
@@ -73,22 +71,18 @@ public class SpikeServiceImpl implements SpikeService {
         Date startTime = spike.getStartTime();
         Date endTime = spike.getEndTime();
         Date nowTime = new Date();
+        //秒杀未开始或秒杀已经结束
         if (nowTime.getTime() < startTime.getTime() || nowTime.getTime() > endTime.getTime()) {
             return new Exposer(false, spikeId, nowTime.getTime(), startTime.getTime(), endTime.getTime());
         }
-        String md5 = getMd5(spikeId);
+        //秒杀进行中，可以暴露秒杀接口
+        String md5 = MD5Util.getMd5(spikeId);
         return new Exposer(true, md5, spikeId);
     }
 
-    private String getMd5(long spikeId) {
-        String base = spikeId + "/" + slat;
-        String md5 = DigestUtils.md5DigestAsHex(base.getBytes());
-        return md5;
-    }
-
     @Override
-    public SpikeExecution executeSpikeByProcedure(Long spikeId, long userPhone, String md5) {
-        if (md5 == null || !md5.equals(getMd5(spikeId))) {
+    public SpikeExecution executeSpikeByProcedure(Long spikeId, Long userPhone, String md5) {
+        if (md5 == null || !md5.equals(MD5Util.getMd5(spikeId))) {
             return new SpikeExecution(spikeId, SpikeStateEnum.DATA_REWQITE);
         }
         Date killTime = new Date();
@@ -102,9 +96,11 @@ public class SpikeServiceImpl implements SpikeService {
             //获取结果
             int result = MapUtils.getInteger(map, "result", -2);
             if (result == 1) {
+                //秒杀成功
                 SpikeSuccess spikeSuccess = spikeSuccessMapper.queryByIdWithSpike(spikeId, userPhone);
                 return new SpikeExecution(spikeId, SpikeStateEnum.SUCCESS, spikeSuccess);
             } else {
+                //其它原因
                 return new SpikeExecution(spikeId, SpikeStateEnum.stateOf(result));
             }
         } catch (Exception e) {
@@ -112,16 +108,16 @@ public class SpikeServiceImpl implements SpikeService {
             return new SpikeExecution(spikeId, SpikeStateEnum.INNER_ERROR);
         }
     }
-
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
-    public SpikeExecution executeSpike(Long spikeId, long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException {
-        if (md5 == null || !md5.equals(getMd5(spikeId))) {
+    public SpikeExecution executeSpike(Long spikeId, Long userPhone, String md5) throws SpikeCloseException, RepeatSpikeException {
+        if (md5 == null || !md5.equals(MD5Util.getMd5(spikeId))) {
             throw new SpikeException("用户数据已修改");
         }
         try {
-            //执行插入
+            //先执行插入
             int insertCount = spikeSuccessMapper.addSuccessSpikeByIdAndPhone(spikeId, userPhone);
+            //用户出现重复秒杀
             if (insertCount <= 0) {
                 throw new RepeatSpikeException("不能重复秒杀！");
             } else {

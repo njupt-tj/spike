@@ -18,9 +18,10 @@
         where spike_id=#{spikeId};
     </select>
     <select id="queryAll" resultType="Spike">
-        select spike_id,name,number,start_time,end_time,create_time
+        select spike_id,name,number,start_time,end_time
         from spike_t
-        order by create_time desc
+        where end_time>now()
+        order by start_time,end_time
         limit #{offset},#{limit};
     </select>
 
