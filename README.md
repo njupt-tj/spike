@@ -2,21 +2,21 @@
 
 
 ## **目录** ##
-- [<font size=4>**秒杀业务特点**</font>](http://github.com/njupt-tj/spike/#秒杀业务特点)
-- [<font size=4>**秒杀架构**</font>](http://github.com/njupt-tj/spike/#秒杀架构)
-   - [<font size=4>**前端架构**</font>](http://github.com/njupt-tj/spike/#前端架构)
-   - [<font size=4>**后端架构**</font>](http://github.com/njupt-tj/spike/#后端架构)
-- [<font size=4>**数据库表设计**</font>](http://github.com/njupt-tj/spike/#数据库表设计)
-- [<font size=4>**技术选型**</font>](http://github.com/njupt-tj/spike/#技术选型)
-   - [<font size=4>**前端技术**</font>](http://github.com/njupt-tj/spike/#前端技术)
-   - [<font size=4>**后端技术**</font>](http://github.com/njupt-tj/spike/#后端技术)
-- [<font size=4>**开发工具**</font>](http://github.com/njupt-tj/spike/#开发工具)
-- [<font size=4>**开发环境**</font>](http://github.com/njupt-tj/spike/#开发环境)
-- [<font size=4>**项目结构**</font>](http://github.com/njupt-tj/spike/#项目结构)
-- [<font size=4>**实现功能**</font>](http://github.com/njupt-tj/spike/#实现功能)
-- [<font size=4>**效果展示**</font>](http://github.com/njupt-tj/spike/#效果展示)
-- [<font size=4>**高并发优化**</font>](http://github.com/njupt-tj/spike/#高并发优化)
-- [<font size=4>**待完善的功能**</font>](http://github.com/njupt-tj/spike/#待完善功能)
+- [<font size=4>**秒杀业务特点**</font>](#秒杀业务特点)
+- [<font size=4>**秒杀架构**</font>](#秒杀架构)
+   - [<font size=4>**前端架构**</font>](#前端架构)
+   - [<font size=4>**后端架构**</font>](#后端架构)
+- [<font size=4>**数据库表设计**</font>](#数据库表设计)
+- [<font size=4>**技术选型**</font>](#技术选型)
+   - [<font size=4>**前端技术**</font>](#前端技术)
+   - [<font size=4>**后端技术**</font>](#后端技术)
+- [<font size=4>**开发工具**</font>](#开发工具)
+- [<font size=4>**开发环境**</font>](#开发环境)
+- [<font size=4>**项目结构**</font>](#项目结构)
+- [<font size=4>**实现功能**</font>](#实现功能)
+- [<font size=4>**效果展示**</font>](#效果展示)
+- [<font size=4>**高并发优化**</font>](#高并发优化)
+- [<font size=4>**待完善的功能**</font>](#待完善的功能)
 
 ## 秒杀业务特点 ##
 1. <font size=4 color=black >高并发读，即在秒杀的一瞬间有大量的用户抢购同一个商品</font>
