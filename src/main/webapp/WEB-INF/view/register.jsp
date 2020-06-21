@@ -25,7 +25,7 @@
 <div class="container">
 
 
-
+<h2>注册页面</h2>
 
 </div>
 
