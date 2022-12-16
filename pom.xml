@@ -33,7 +33,7 @@
         <spring-webmvc.version>5.1.3.RELEASE</spring-webmvc.version>
         <spring-jdbc.version>5.1.3.RELEASE</spring-jdbc.version>
         <spring-context.version>5.1.3.RELEASE</spring-context.version>
-        <spring-beans.version>5.1.3.RELEASE</spring-beans.version>
+        <spring-beans.version>5.2.20.RELEASE</spring-beans.version>
         <spring-test.version>5.1.3.RELEASE</spring-test.version>
         <spring-web.version>5.1.3.RELEASE</spring-web.version>
         <lombok.version>1.16.20</lombok.version>
